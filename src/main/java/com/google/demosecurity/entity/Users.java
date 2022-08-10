@@ -1,11 +1,11 @@
 package com.google.demosecurity.entity;
 
+import com.google.demosecurity.enums.RoleEnum;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
+import java.util.List;
 
 @Entity
 @Data
@@ -18,4 +18,12 @@ public class Users {
     @Email
     private String email;
     private String password;
+    private Boolean enabled = true;
+
+    @ElementCollection(targetClass = RoleEnum.class)
+    @CollectionTable(
+            name = "authorities",
+            joinColumns = @JoinColumn(name = "email", referencedColumnName = "email"))
+    @Enumerated(EnumType.STRING)
+    private List<RoleEnum> roleEnum;
 }
