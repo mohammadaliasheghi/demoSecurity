@@ -34,26 +34,27 @@ public class MainController {
     }
 
     @GetMapping("/admin")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('OP_ACCESS_ADMIN')")
     public String adminPage() {
         return "admin";
     }
 
-    @GetMapping("/admin/delete/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public String deleteAdmin(@PathVariable Long id) {
+    @GetMapping("/delete/{id}")
+    @PreAuthorize("hasAuthority('OP_DELETE_USER')")
+    public String delete(@PathVariable Long id) {
         Optional<Users> users = usersService.get(id);
         users.ifPresent(usersService::deleteUser);
         return "redirect:/admin";
     }
 
-    @GetMapping("/admin/get/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Users> getAdmin(@PathVariable Long id) {
+    @GetMapping("/get/{id}")
+    @PreAuthorize("hasAuthority('OP_GET_USER')")
+    public ResponseEntity<Users> get(@PathVariable Long id) {
         return new ResponseEntity<>(usersService.getUsers(id), HttpStatus.OK);
     }
 
     @GetMapping("/user")
+    @PreAuthorize("hasAuthority('OP_ACCESS_USER')")
     public String userPage() {
         return "user";
     }
