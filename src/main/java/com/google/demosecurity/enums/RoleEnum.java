@@ -1,7 +1,14 @@
 package com.google.demosecurity.enums;
 
-public enum RoleEnum {
+import org.springframework.security.core.GrantedAuthority;
+
+public enum RoleEnum implements GrantedAuthority {
 
     ADMIN,
-    USER
+    USER;
+
+    @Override
+    public String getAuthority() {
+        return this.name();
+    }
 }

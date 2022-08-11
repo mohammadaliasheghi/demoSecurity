@@ -1,5 +1,6 @@
 package com.google.demosecurity.config;
 
+import com.google.demosecurity.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,14 +10,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.sql.DataSource;
-
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String PASSWORD = "123";
-    private final DataSource dataSource;
+    private final UsersService usersService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -34,10 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication()
-                .dataSource(this.dataSource)
-                .usersByUsernameQuery("select email , password , enabled from users where email = ? ")
-                .authoritiesByUsernameQuery("select email , role_enum from authorities where email = ? ");
+        auth.userDetailsService(usersService);
     }
 
     @Bean
