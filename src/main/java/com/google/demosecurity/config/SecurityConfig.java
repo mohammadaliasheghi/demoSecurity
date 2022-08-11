@@ -22,7 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/login")
+                .antMatchers("/", "/login", "error")
                 .permitAll()
 //                .antMatchers("/user/**", "/signUp/**").hasAnyAuthority("USER", "ADMIN")
 //                .antMatchers("/admin/**").hasAuthority("ADMIN")
@@ -31,7 +31,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .usernameParameter("email");
+                .usernameParameter("email")
+//                .defaultSuccessUrl("/", true)
+                .successHandler(new LoginSuccessHandler())
+                .and()
+                .exceptionHandling()
+                .accessDeniedPage("/error")
+                .and()
+                .logout()
+//                .logoutUrl("/logout")
+                .logoutSuccessUrl("/");
     }
 
     @Override

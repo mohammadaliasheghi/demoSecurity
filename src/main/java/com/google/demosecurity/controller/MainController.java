@@ -28,6 +28,11 @@ public class MainController {
         return "index";
     }
 
+    @GetMapping("/error")
+    public String errorPage() {
+        return "error";
+    }
+
     @GetMapping("/login")
     public String loginPage() {
         return "login";
