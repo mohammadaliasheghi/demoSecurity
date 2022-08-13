@@ -35,12 +35,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .defaultSuccessUrl("/", true)
                 .successHandler(new LoginSuccessHandler())
                 .and()
+                .rememberMe()
+                .rememberMeCookieName("remember")
+                .tokenValiditySeconds(24 * 60 * 60)
+                .rememberMeParameter("remember_me")
+                .and()
                 .exceptionHandling()
                 .accessDeniedPage("/error")
                 .and()
                 .logout()
 //                .logoutUrl("/logout")
-                .logoutSuccessUrl("/");
+                .logoutSuccessUrl("/")
+                .deleteCookies("remember", "remember-me");
     }
 
     @Override

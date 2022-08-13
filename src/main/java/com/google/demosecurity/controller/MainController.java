@@ -10,6 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 @Controller
@@ -62,5 +65,20 @@ public class MainController {
     @PreAuthorize("hasAuthority('OP_ACCESS_USER')")
     public String userPage() {
         return "user";
+    }
+
+    @GetMapping("/getCookie")
+    public String getCookie(HttpServletRequest request) {
+        for (Cookie cookie : request.getCookies())
+            System.out.println(cookie.getName() + " : " + cookie.getValue());
+        return "index";
+    }
+
+    @GetMapping("/setCookie")
+    public String setCookie(HttpServletResponse response) {
+        Cookie cookie = new Cookie("mohammad", "42589");
+        cookie.setMaxAge(24 * 60 * 60);
+        response.addCookie(cookie);
+        return "index";
     }
 }
