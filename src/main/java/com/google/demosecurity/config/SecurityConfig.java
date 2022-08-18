@@ -34,6 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("email")
 //                .defaultSuccessUrl("/", true)
                 .successHandler(new LoginSuccessHandler())
+//                .oauth2Login()
                 .and()
                 .rememberMe()
                 .rememberMeCookieName("remember")

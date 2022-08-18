@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
 import java.util.Optional;
 
 @Controller
@@ -80,5 +81,10 @@ public class MainController {
         cookie.setMaxAge(24 * 60 * 60);
         response.addCookie(cookie);
         return "index";
+    }
+
+    @GetMapping("/info")
+    public Principal setCookie(Principal principal) {
+        return principal;
     }
 }
