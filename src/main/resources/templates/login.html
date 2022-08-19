@@ -1,3 +1,4 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -25,9 +26,21 @@
 
         <tr>
             <td>
-                <label for="email" class="sr-only">Remember Me</label>
-                <label for="password" class="sr-only">
-                    <input type="checkbox" name="remember_me">
+                <label>
+                    <label>
+                        <p>RememberMe</p>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="remember_me">
+                    </label>
+                </label>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <label>
+                    <a th:href="@{/login/oauth2/google}">GOOGLE</a>
                 </label>
             </td>
         </tr>
@@ -36,3 +49,4 @@
     </form>
 </div>
 </body>
+</html>

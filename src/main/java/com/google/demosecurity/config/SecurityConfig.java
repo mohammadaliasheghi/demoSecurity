@@ -1,5 +1,6 @@
 package com.google.demosecurity.config;
 
+import com.google.demosecurity.service.OAuth2UserService;
 import com.google.demosecurity.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UsersService usersService;
+    private final OAuth2UserService oAuth2UserService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -34,7 +36,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("email")
 //                .defaultSuccessUrl("/", true)
                 .successHandler(new LoginSuccessHandler())
-//                .oauth2Login()
+
+                .and()
+                .oauth2Login()
+                .loginPage("/oauth2Login")
+                .authorizationEndpoint()
+                .baseUri("/login/oauth2/")
+                .and()
+                .redirectionEndpoint()
+                .baseUri("/login/callBack")
+                .and()
+                .userInfoEndpoint()
+                .userService(oAuth2UserService)
+                .and()
+
                 .and()
                 .rememberMe()
                 .rememberMeCookieName("remember")

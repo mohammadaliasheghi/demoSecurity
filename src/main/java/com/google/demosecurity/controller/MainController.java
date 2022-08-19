@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -84,7 +85,9 @@ public class MainController {
     }
 
     @GetMapping("/info")
-    public Principal setCookie(Principal principal) {
+    @PreAuthorize("hasAuthority('OP_PRINCIPAL_INFO')")
+    public @ResponseBody
+    Principal getPrincipal(Principal principal) {
         return principal;
     }
 }
