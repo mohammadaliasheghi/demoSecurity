@@ -5,6 +5,7 @@ import com.google.demosecurity.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/login", "error")
+                .antMatchers("/", "/login", "error", "/jwt/login")
                 .permitAll()
 //                .antMatchers("/user/**", "/signUp/**").hasAnyAuthority("USER", "ADMIN")
 //                .antMatchers("/admin/**").hasAuthority("ADMIN")
@@ -37,19 +38,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .defaultSuccessUrl("/", true)
                 .successHandler(new LoginSuccessHandler())
 
-                .and()
-                .oauth2Login()
-                .loginPage("/oauth2Login")
-                .authorizationEndpoint()
-                .baseUri("/login/oauth2/")
-                .and()
-                .redirectionEndpoint()
-                .baseUri("/login/callBack")
-                .and()
-                .userInfoEndpoint()
-                .userService(oAuth2UserService)
-                .and()
-                .successHandler(new LoginSuccessHandler())
+                //using for oAuth google or other provider
+//                .and()
+//                .oauth2Login()
+//                .loginPage("/oauth2Login")
+//                .authorizationEndpoint()
+//                .baseUri("/login/oauth2/")
+//                .and()
+//                .redirectionEndpoint()
+//                .baseUri("/login/callBack")
+//                .and()
+//                .userInfoEndpoint()
+//                .userService(oAuth2UserService)
+//                .and()
+//                .successHandler(new LoginSuccessHandler())
 
                 .and()
                 .rememberMe()
@@ -69,6 +71,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(usersService);
+    }
+
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Bean

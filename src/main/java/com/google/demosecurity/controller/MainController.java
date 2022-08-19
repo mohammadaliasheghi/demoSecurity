@@ -1,15 +1,17 @@
 package com.google.demosecurity.controller;
 
 import com.google.demosecurity.entity.Users;
+import com.google.demosecurity.jwt.JwtAuth;
+import com.google.demosecurity.jwt.JwtUtil;
 import com.google.demosecurity.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +24,8 @@ import java.util.Optional;
 public class MainController {
 
     private final UsersService usersService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
 
     @GetMapping("/signUp")
     public String signUpPage() {
@@ -90,4 +94,17 @@ public class MainController {
     Principal getPrincipal(Principal principal) {
         return principal;
     }
+
+    @PostMapping("/jwt/login")
+    public ResponseEntity<?> jwtLogin(@RequestBody JwtAuth jwtAuth, HttpServletResponse response) {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(jwtAuth.getUsername(), jwtAuth.getPassword()));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        response.addHeader("Authorization", jwtUtil.generateToken(jwtAuth.getUsername()));
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
