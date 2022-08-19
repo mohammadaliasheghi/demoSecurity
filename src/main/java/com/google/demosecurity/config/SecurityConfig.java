@@ -49,6 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .userInfoEndpoint()
                 .userService(oAuth2UserService)
                 .and()
+                .successHandler(new LoginSuccessHandler())
 
                 .and()
                 .rememberMe()
