@@ -107,4 +107,9 @@ public class MainController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/jwt/hello")
+    public ResponseEntity<?> jwtPage() {
+        return new ResponseEntity<>("HELLO JWT", HttpStatus.OK);
+    }
+
 }

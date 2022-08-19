@@ -9,8 +9,9 @@ import java.util.Date;
 @Service
 public class JwtUtil {
 
+    private final String SECRET = "MOHAMMAD_GENERATE_TOKEN_TEST_DEMO_APPLICATION";
+
     public String generateToken(String username) {
-        String SECRET = "MOHAMMAD_GENERATE_TOKEN_TEST_DEMO_APPLICATION";
         return Jwts.builder()
                 .setSubject(username)
                 .setExpiration(new Date(System.currentTimeMillis() + (24 * 60 * 60 * 1000)))
@@ -18,4 +19,7 @@ public class JwtUtil {
                 .compact();
     }
 
+    public String getUsername(String token) {
+        return Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getBody().getSubject();
+    }
 }

@@ -1,5 +1,6 @@
 package com.google.demosecurity.config;
 
+import com.google.demosecurity.jwt.JwtFilter;
 import com.google.demosecurity.service.OAuth2UserService;
 import com.google.demosecurity.service.UsersService;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +11,10 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -20,6 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UsersService usersService;
     private final OAuth2UserService oAuth2UserService;
+    private final JwtFilter jwtFilter;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -65,7 +69,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
 //                .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
-                .deleteCookies("remember", "remember-me");
+                .deleteCookies("remember", "remember-me")
+                //using for validate token
+                //important : if using jwt and restFull api then session going to state less from state full
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
