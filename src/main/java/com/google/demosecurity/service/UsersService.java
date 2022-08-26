@@ -18,6 +18,10 @@ public class UsersService implements UserDetailsService {
 
     private final UsersRepository usersRepository;
 
+    public Users register(Users users) {
+        return usersRepository.save(users);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return usersRepository.findByEmail(email);

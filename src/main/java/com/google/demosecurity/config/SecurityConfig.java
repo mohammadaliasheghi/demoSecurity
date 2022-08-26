@@ -11,10 +11,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -29,13 +27,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/", "/login", "error", "/jwt/login")
+                .antMatchers("/", "/login", "error", "/jwt/login", "/otp/**")
                 .permitAll()
 //                .antMatchers("/user/**", "/signUp/**").hasAnyAuthority("USER", "ADMIN")
 //                .antMatchers("/admin/**").hasAuthority("ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()
+                //for one time password (otp)
+                .formLogin()
+                .loginPage("/otp/login")
+                .usernameParameter("email")
+                .passwordParameter("otp")
+                .successHandler(new LoginSuccessHandler())
+                .and()
+                .exceptionHandling()
+                .accessDeniedPage("/error")
+                .and()
+                .logout();
+
+
+        //for oAuth and Jwt
+                /*
                 .formLogin()
                 .loginPage("/login")
                 .usernameParameter("email")
@@ -76,6 +89,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                 */
     }
 
     @Override
